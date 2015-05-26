@@ -3,25 +3,26 @@
 // Request an API key at http://dev.storify.com/request
 
 class StorifyClient {
-  	private $apiKey = '555dfd3098b51ce25b47be4d';
+  	private $apiKey;
 	private $username;
 	private $token;
 
-	function __construct($username, $token, $password) {
-		if (!$token) {
-			$token = $this->token($username, $password);
-		}
+    function __construct($username, $token, $password, $apiKey) {
+        if (!$token) {
+            $token = $this->token($username, $password, $apiKey);
+        }
 
-		$this->username = $username;
-		$this->token = $token;
-                $this->password = $password;
+        $this->username = $username;
+        $this->token = $token;
+        $this->password = $password;
+        $this->apiKey = $apiKey;
 
-		$this->curl = curl_init();
-		curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($this->curl, CURLOPT_VERBOSE, true);
-	}
+        $this->curl = curl_init();
+        curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($this->curl, CURLOPT_VERBOSE, true);
+    }
 
-	function exec() {
+    function exec() {
 		$result = curl_exec($this->curl);
 		$code = curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
 
@@ -50,9 +51,9 @@ class StorifyClient {
 		return $this->exec();
 	}
 
-	function token($username, $password) {
+	function token($username, $password, $apiKey) {
 		$params = array(
-			'api_key' => $this->apiKey,
+			'api_key' => $apiKey,
 			'username' => $username,
 			'password' => $password,
 		);
